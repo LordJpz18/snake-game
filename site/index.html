@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Jeu du Serpent en Python - Tutoriel pour Débutants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        header {
+            background: #32cd32;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #ff4500;
+            border-bottom: 2px solid #ff4500;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #4682b4;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #4682b4;
+            border-radius: 5px;
+        }
+        .image-container caption {
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 20px;
+        }
+        footer p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Créer un Jeu du Serpent en Python</h1>
+        <p>Un tutoriel amusant pour débutants avec la bibliothèque Turtle !</p>
+    </header>
+
+    <div class="container">
+        <!-- Section 1: Introduction à Turtle -->
+        <section>
+            <h2>1. Découvrir la Bibliothèque Turtle</h2>
+            <p>La bibliothèque <strong>turtle</strong> en Python est comme un crayon magique qui dessine à l’écran ! Elle te permet de créer des formes, déplacer un petit curseur (la "tortue"), et même faire des jeux. Voici quelques exemples simples pour commencer.</p>
+
+            <h3>Exemple 1 : Dessiner un Cercle</h3>
+            <pre><code>import turtle
+t = turtle.Turtle()
+t.circle(50)  # Dessine un cercle de rayon 50
+turtle.done()</code></pre>
+            <p>Cette tortue dessine un cercle. La commande <code>circle(50)</code> dit à la tortue de tracer un cercle de taille 50 pixels.</p>
+            <div class="image-container">
+                <img src="circle.png" alt="Exemple d’un cercle dessiné avec Turtle">
+                <caption>Un cercle tout simple !</caption>
+            </div>
+
+            <h3>Exemple 2 : Dessiner un Triangle</h3>
+            <pre><code>import turtle
+t = turtle.Turtle()
+for i in range(3):  # Répète 3 fois
+    t.forward(100)  # Avance de 100 pixels
+    t.left(120)     # Tourne de 120 degrés
+turtle.done()</code></pre>
+            <p>Ici, la tortue avance et tourne trois fois pour faire un triangle. Chaque côté mesure 100 pixels.</p>
+            <div class="image-container">
+                <img src="triangle.png" alt="Exemple d’un triangle dessiné avec Turtle">
+                <caption>Un triangle bien net !</caption>
+            </div>
+
+            <h3>Exemple 3 : Dessiner un Rectangle</h3>
+            <pre><code>import turtle
+t = turtle.Turtle()
+for i in range(2):  # Répète 2 fois
+    t.forward(100)  # Longueur de 100
+    t.left(90)      # Tourne à 90°
+    t.forward(50)   # Largeur de 50
+    t.left(90)
+turtle.done()</code></pre>
+            <p>Ce code fait un rectangle avec des côtés de 100 et 50 pixels. La tortue tourne à angle droit (90°).</p>
+            <div class="image-container">
+                <img src="rect.png" alt="Exemple d’un rectangle dessiné avec Turtle">
+                <caption>Un rectangle facile à dessiner !</caption>
+            </div>
+        </section>
+
+        <!-- Section 2: Tutoriel du Jeu Snake -->
+        <section>
+            <h2>2. Construire le Jeu du Serpent</h2>
+            <p>Maintenant, utilisons <code>turtle</code> pour créer un jeu du serpent ! Voici comment fonctionne chaque partie du code étape par étape.</p>
+
+            <h3>Étape 1 : Importer les bibliothèques et configurer</h3>
+            <pre><code>import turtle
+import time
+import random
+
+delay = 0.1
+score = 0
+high_score = 0
+
+wn = turtle.Screen()
+wn.title("Snake Game by @TokyoEdTech")
+wn.bgcolor("green")
+wn.setup(width=600, height=600)
+wn.tracer(0)</code></pre>
+            <p><strong>Explication :</strong> On importe <code>turtle</code> pour dessiner, <code>time</code> pour ralentir le jeu, et <code>random</code> pour placer la nourriture aléatoirement. <code>delay</code> contrôle la vitesse, et <code>score</code> garde ton score. La fenêtre (<code>wn</code>) est verte et mesure 600x600 pixels. <code>tracer(0)</code> désactive les mises à jour automatiques pour qu’on les contrôle nous-mêmes.</p>
+            <div class="image-container">
+                <img src="screen.png" alt="Écran initial du jeu Snake">
+                <caption>L’écran vert prêt pour le serpent !</caption>
+            </div>
+
+            <h3>Étape 2 : Créer la tête du serpent</h3>
+            <pre><code>head = turtle.Turtle()
+head.speed(0)
+head.shape("square")
+head.color("black")
+head.penup()
+head.goto(0,0)
+head.direction = "stop"</code></pre>
+            <p><strong>Explication :</strong> La tête du serpent (<code>head</code>) est un carré noir qui commence au centre (0,0). <code>penup()</code> évite de dessiner des lignes, et <code>direction</code> dit où elle va (au début, elle ne bouge pas).</p>
+
+            <h3>Étape 3 : Ajouter la nourriture</h3>
+            <pre><code>food = turtle.Turtle()
+food.speed(0)
+food.shape("circle")
+food.color("red")
+food.penup()
+food.goto(0,100)</code></pre>
+            <p><strong>Explication :</strong> La nourriture est un cercle rouge qui apparaît à (0,100). Le serpent doit la manger pour grandir !</p>
+
+            <h3>Étape 4 : Gérer les mouvements</h3>
+            <pre><code>def go_up():
+    if head.direction != "down":
+        head.direction = "up"
+
+def go_down():
+    if head.direction != "up":
+        head.direction = "down"
+
+def go_left():
+    if head.direction != "right":
+        head.direction = "left"
+
+def go_right():
+    if head.direction != "left":
+        head.direction = "right"
+
+def move():
+    if head.direction == "up":
+        y = head.ycor()
+        head.sety(y + 20)
+    if head.direction == "down":
+        y = head.ycor()
+        head.sety(y - 20)
+    if head.direction == "left":
+        x = head.xcor()
+        head.setx(x - 20)
+    if head.direction == "right":
+        x = head.xcor()
+        head.setx(x + 20)
+
+wn.listen()
+wn.onkeypress(go_up, "Up")
+wn.onkeypress(go_down, "Down")
+wn.onkeypress(go_left, "Left")
+wn.onkeypress(go_right, "Right")</code></pre>
+            <p><strong>Explication :</strong> Ces fonctions contrôlent la direction du serpent avec les flèches. Par exemple, <code>go_up()</code> le fait monter, mais seulement s’il ne va pas déjà vers le bas. <code>move()</code> déplace la tête de 20 pixels dans la direction choisie. <code>listen()</code> active l’écoute des touches.</p>
+            <div class="image-container">
+                <img src="snake.gif" alt="Serpent en mouvement">
+                <caption>Le serpent suit tes flèches !</caption>
+            </div>
+
+            <h3>Étape 5 : Boucle principale et collisions</h3>
+            <pre><code>while True:
+    wn.update()
+
+    # Collision avec les bords
+    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+        time.sleep(1)
+        head.goto(0,0)
+        head.direction = "stop"
+        for segment in segments:
+            segment.goto(1000, 1000)
+        segments.clear()
+        score = 0
+        delay = 0.1
+        pen.clear()
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+
+    # Collision avec la nourriture
+    if head.distance(food) < 20:
+        x = random.randint(-290, 290)
+        y = random.randint(-290, 290)
+        food.goto(x,y)
+        new_segment = turtle.Turtle()
+        new_segment.speed(0)
+        new_segment.shape("square")
+        new_segment.color("grey")
+        new_segment.penup()
+        segments.append(new_segment)
+        delay -= 0.001
+        score += 10
+        if score > high_score:
+            high_score = score
+        pen.clear()
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+
+    # Mouvement des segments
+    for index in range(len(segments)-1, 0, -1):
+        x = segments[index-1].xcor()
+        y = segments[index-1].ycor()
+        segments[index].goto(x, y)
+    if len(segments) > 0:
+        x = head.xcor()
+        y = head.ycor()
+        segments[0].goto(x,y)
+
+    move()
+
+    # Collision avec le corps
+    for segment in segments:
+        if segment.distance(head) < 20:
+            time.sleep(1)
+            head.goto(0,0)
+            head.direction = "stop"
+            for segment in segments:
+                segment.goto(1000, 1000)
+            segments.clear()
+            score = 0
+            delay = 0.1
+            pen.clear()
+            pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+
+    time.sleep(delay)</code></pre>
+            <p><strong>Explication :</strong> La boucle <code>while True</code> fait tourner le jeu. <code>wn.update()</code> rafraîchit l’écran. Si le serpent touche les bords (290 ou -290), il revient au centre et le score est réinitialisé. S’il mange la nourriture (<code>distance < 20</code>), elle change de place, un segment gris est ajouté, et le score monte. Les segments suivent la tête, et si elle se cogne dans son corps, le jeu recommence.</p>
+            <div class="image-container">
+                <img src="game.gif" height=400px width=600px alt="Serpent avec segments et nourriture">
+		<p><caption>Le serpent grandit en mangeant !</caption></p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Créé par Jean Philippe ZANGA</p>
+        <p>Email : jphilippezanga@gmail.com</p>
+        <p>Pour les jeunes codeurs curieux !</p>
+    </footer>
+</body>
+</html>
