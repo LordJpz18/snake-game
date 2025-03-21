@@ -6,4 +6,4 @@ Move down is Down key
 Go left is Left key
 Go right is Right key
 
-the tutorial is available in french on my website
+the tutorial is available in french on my website :  https://lordjpz18.github.io/snake-game/
