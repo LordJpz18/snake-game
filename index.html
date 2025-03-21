@@ -127,8 +127,10 @@ turtle.done()</code></pre>
         <!-- Section 2: Tutoriel du Jeu Snake -->
         <section>
             <h2>2. Construire le Jeu du Serpent</h2>
-            <p>Maintenant, utilisons <code>turtle</code> pour créer un jeu du serpent ! Voici comment fonctionne chaque partie du code étape par étape.</p>
-
+            <p>Maintenant, utilisons <code>turtle</code> pour créer un jeu du serpent ! Nous allons compléter le code étape par étape.</p>
+	    <div class="image-container">
+        Télécharger le fichier <a href="snake.py" download="snake_game.py" class="download-link">snake_game.py</a>
+    </div>
             <h3>Étape 1 : Importer les bibliothèques et configurer</h3>
             <pre><code>import turtle
 import time
@@ -139,7 +141,7 @@ score = 0
 high_score = 0
 
 wn = turtle.Screen()
-wn.title("Snake Game by @TokyoEdTech")
+wn.title("Snake Game by JPZ")
 wn.bgcolor("green")
 wn.setup(width=600, height=600)
 wn.tracer(0)</code></pre>
@@ -207,7 +209,7 @@ wn.onkeypress(go_right, "Right")</code></pre>
             <p><strong>Explication :</strong> Ces fonctions contrôlent la direction du serpent avec les flèches. Par exemple, <code>go_up()</code> le fait monter, mais seulement s’il ne va pas déjà vers le bas. <code>move()</code> déplace la tête de 20 pixels dans la direction choisie. <code>listen()</code> active l’écoute des touches.</p>
             <div class="image-container">
                 <img src="snake.gif" alt="Serpent en mouvement">
-                <caption>Le serpent suit tes flèches !</caption>
+		<p><caption>Le serpent suit tes flèches !</caption></p>
             </div>
 
             <h3>Étape 5 : Boucle principale et collisions</h3>
