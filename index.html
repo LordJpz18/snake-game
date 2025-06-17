@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Security - Advanced Car Security Solutions</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- AOS - Animate on Scroll Library -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- LeafletJS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <style>
+        /* --- General Styling & CSS Variables --- */
+        :root {
+            --primary-color: #00aaff; /* A vibrant blue for accents */
+            --secondary-color: #00e676; /* A bright green for contrast */
+            --dark-bg: #121212;
+            --light-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #888;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: transparent;
+            transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
+        }
+
+        .header.scrolled {
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 400;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        #home {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: url('https://images.unsplash.com/photo-1678909159336-714a60b943d0?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+            position: relative;
+            color: #fff;
+        }
+
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(18, 18, 18, 1), rgba(18, 18, 18, 0.4));
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: var(--text-color);
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 170, 255, 0.2);
+        }
+
+        /* --- Products Section --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--light-bg);
+            padding: 40px 30px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .product-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            background: var(--light-bg);
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .contact-info p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-info i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 20px;
+            width: 30px;
+            text-align: center;
+        }
+
+        #map {
+            height: 450px;
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            filter: grayscale(1) invert(1) contrast(0.8);
+        }
+
+        /* --- Testimonials / Comments Section --- */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        .comment-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        
+        /* Custom scrollbar for comment list */
+        .comment-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .comment-list::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+        .comment-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .comment-card {
+            background: var(--light-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .comment-card blockquote {
+            font-style: italic;
+            color: var(--text-muted);
+            border: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+
+        .comment-card .author {
+            font-weight: 600;
+            color: var(--text-color);
+            text-align: right;
+        }
+
+        .comment-form {
+            background: var(--light-bg);
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .comment-form h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .form-submit-btn:hover {
+            background: #0099e6;
+            transform: translateY(-2px);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--dark-bg);
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            .comment-list {
+                margin-bottom: 40px;
+            }
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Simplification for small screens, a full hamburger menu is more complex */
+            }
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container navbar">
+            <a href="#home" class="logo"><i class="fas fa-shield-halved"></i>Auto Security</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Produits</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#testimonials">Commentaires</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>Conduis Avec Assurance. Ton Vehicle, Sécurisé.</h1>
+                <p>
+                    In a world of uncertainties, your car's safety shouldn't be one of them. We provide military-grade security technology to protect your vehicle from theft, intrusion, and unsafe driving habits.
+                </p>
+                <a href="#products" class="cta-button">Explore Our Solutions</a>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products">
+            <div class="container">
+                <h2>Our Innovative Solutions</h2>
+                <div class="products-grid">
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fas fa-satellite-dish product-icon"></i>
+                        <h3>Real-Time GPS Tracking</h3>
+                        <p>Know your car's exact location, 24/7, with pinpoint accuracy. Set geofences and get instant alerts if your vehicle enters or leaves a designated area.</p>
+                    </div>
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-engine-warning product-icon"></i>
+                        <h3>Remote Engine Kill Switch</h3>
+                        <p>In the event of theft, remotely disable your car's engine from your smartphone, bringing it to a safe stop and preventing any further movement.</p>
+                    </div>
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-volume-up product-icon"></i>
+                        <h3>Advanced Alarm Systems</h3>
+                        <p>Our smart alarm system detects unauthorized entry, glass breakage, and impacts, triggering a powerful siren and sending an instant notification to your phone.</p>
+                    </div>
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fas fa-video product-icon"></i>
+                        <h3>HD Dash & Cabin Cameras</h3>
+                        <p>Record every moment on the road and inside your car in crystal-clear HD. Essential for accident evidence, insurance claims, and monitoring drivers.</p>
+                    </div>
+                    <div class="product-card" data-aos-="fade-up" data-aos-delay="200">
+                        <i class="fas fa-mobile-screen-button product-icon"></i>
+                        <h3>Anti-Distraction Alerts</h3>
+                        <p>Promote safer driving habits with intelligent alerts for phone use while driving. Perfect for protecting teen drivers and fleet vehicles.</p>
+                    </div>
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-shield-check product-icon"></i>
+                        <h3>Total Protection Package</h3>
+                        <p>Combine all our services for the ultimate security shield. Get complete control and peace of mind with our all-in-one integrated solution.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2>Get in Touch</h2>
+                <div class="contact-wrapper" data-aos="fade-right">
+                    <div class="contact-info">
+                        <h3>SecureRide France HQ</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Avenue des Champs-Élysées, 75008 Paris, France</p>
+                        <p><i class="fas fa-phone"></i> +33 1 23 45 67 89</p>
+                        <p><i class="fas fa-envelope"></i> contact@secureride.fr</p>
+                    </div>
+                    <div class="map-container">
+                         <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials">
+            <div class="container">
+                <h2>What Our Clients Say</h2>
+                <div class="testimonials-grid">
+                    <div class="comment-list" data-aos="fade-up">
+                        <!-- Pre-populated comments -->
+                        <div class="comment-card">
+                            <blockquote>"The GPS tracker is incredibly accurate. I feel so much safer leaving my car parked downtown. The mobile app is also very easy to use. 5 stars!"</blockquote>
+                            <p class="author">- Sophie L.</p>
+                        </div>
+                        <div class="comment-card">
+                            <blockquote>"Had my van stolen last year. Installed SecureRide's kill switch and camera system in my new one. It's the peace of mind I've been looking for. Worth every penny."</blockquote>
+                            <p class="author">- Marc D.</p>
+                        </div>
+                         <div class="comment-card">
+                            <blockquote>"The anti-distraction alerts are a lifesaver for my teenage son. I get a notification if he's on his phone while driving. This system is not just about security, it's about safety."</blockquote>
+                            <p class="author">- Isabelle P.</p>
+                        </div>
+                    </div>
+                    <div class="comment-form-container" data-aos="fade-up" data-aos-delay="200">
+                        <form id="comment-form" class="comment-form">
+                            <h3>Leave a Review</h3>
+                            <div class="form-group">
+                                <input type="text" id="userName" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="userComment" placeholder="Your experience with SecureRide..." required></textarea>
+                            </div>
+                            <button type="submit" class="form-submit-btn">Publish Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Auto Security. Tous Droits Réservés.</p>
+	    <p> Site créé par JTech'Z.</p>
+	    <p> Contact : <a href="mailto:jphilipoz@icloud.com">jphilipoz@icloud.com</a></p>
+        </div>
+    </footer>
+
+    <!-- JS Libraries -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Initialize AOS (Animate on Scroll)
+            AOS.init({
+                duration: 800,
+                once: true, // animation happens only once
+                offset: 50 // trigger animation a bit sooner
+            });
+
+            // 2. Header scroll effect
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // 3. Initialize Leaflet Map
+            // Coordinates for Champs-Élysées, Paris
+            const mapCoords = [48.87375, 2.295]; 
+            const map = L.map('map').setView(mapCoords, 16);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker(mapCoords).addTo(map)
+                .bindPopup('<b>SecureRide France HQ</b><br>123 Avenue des Champs-Élysées')
+                .openPopup();
+            
+            // 4. Comment Form Submission Logic
+            const commentForm = document.getElementById('comment-form');
+            const commentList = document.querySelector('.comment-list');
+            const userNameInput = document.getElementById('userName');
+            const userCommentInput = document.getElementById('userComment');
+
+            commentForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent page reload
+
+                const userName = userNameInput.value.trim();
+                const userComment = userCommentInput.value.trim();
+
+                if (userName && userComment) {
+                    // Create new comment element
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('comment-card');
+                    newComment.innerHTML = `
+                        <blockquote>"${userComment}"</blockquote>
+                        <p class="author">- ${userName}</p>
+                    `;
+
+                    // Add the new comment to the top of the list
+                    commentList.prepend(newComment);
+
+                    // Clear the form fields
+                    userNameInput.value = '';
+                    userCommentInput.value = '';
+
+                    // Optional: Scroll to the new comment
+                    newComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
